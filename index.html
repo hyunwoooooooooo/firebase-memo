@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Firebase 회원가입과 사용자별 저장 기능을 갖춘 개인 메모장"
+    />
+    <title>온리노트 | 나만의 메모장</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="background-grid" aria-hidden="true"></div>
+
+    <main class="page-shell">
+      <section id="auth-view" class="auth-layout">
+        <div class="intro-panel">
+          <a class="brand" href="./" aria-label="온리노트 홈">
+            <span class="brand-mark" aria-hidden="true">O</span>
+            <span>온리노트</span>
+          </a>
+
+          <div class="intro-copy">
+            <p class="eyebrow">PRIVATE NOTE, ANYWHERE</p>
+            <h1>어디서 접속해도<br />내 메모 그대로.</h1>
+            <p>
+              이메일로 로그인하면 Firebase가 내 메모를 안전하게 불러옵니다.
+              이번에는 브라우저를 닫아도 사라지지 않아요.
+            </p>
+          </div>
+
+          <div class="feature-list" aria-label="서비스 특징">
+            <span>한 계정, 한 메모</span>
+            <span>클라우드 저장</span>
+            <span>모바일 지원</span>
+          </div>
+        </div>
+
+        <div class="auth-panel">
+          <div class="auth-card">
+            <div class="auth-heading">
+              <p class="eyebrow">WELCOME</p>
+              <h2 id="auth-title">다시 만나서 반가워요</h2>
+              <p id="auth-description">저장한 메모를 확인하려면 로그인하세요.</p>
+            </div>
+
+            <div class="auth-tabs" role="tablist" aria-label="인증 방식 선택">
+              <button
+                id="login-tab"
+                class="tab-button active"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="login-form"
+              >
+                로그인
+              </button>
+              <button
+                id="signup-tab"
+                class="tab-button"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="signup-form"
+              >
+                회원가입
+              </button>
+            </div>
+
+            <div id="setup-notice" class="setup-notice hidden" role="status">
+              <strong>Firebase 연결이 필요합니다.</strong>
+              <span><code>app.js</code> 위쪽의 설정값을 입력해 주세요.</span>
+            </div>
+
+            <form id="login-form" class="auth-form" novalidate>
+              <label>
+                <span>이메일</span>
+                <input
+                  id="login-email"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="name@example.com"
+                  required
+                />
+              </label>
+              <label>
+                <span>비밀번호</span>
+                <input
+                  id="login-password"
+                  type="password"
+                  autocomplete="current-password"
+                  placeholder="6자 이상 입력"
+                  minlength="6"
+                  required
+                />
+              </label>
+              <button class="primary-button" type="submit">로그인</button>
+            </form>
+
+            <form id="signup-form" class="auth-form hidden" novalidate>
+              <label>
+                <span>이메일</span>
+                <input
+                  id="signup-email"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="name@example.com"
+                  required
+                />
+              </label>
+              <label>
+                <span>비밀번호</span>
+                <input
+                  id="signup-password"
+                  type="password"
+                  autocomplete="new-password"
+                  placeholder="6자 이상 입력"
+                  minlength="6"
+                  required
+                />
+              </label>
+              <label>
+                <span>비밀번호 확인</span>
+                <input
+                  id="signup-password-confirm"
+                  type="password"
+                  autocomplete="new-password"
+                  placeholder="비밀번호 다시 입력"
+                  minlength="6"
+                  required
+                />
+              </label>
+              <button class="primary-button" type="submit">계정 만들기</button>
+            </form>
+
+            <p id="auth-message" class="form-message" aria-live="polite"></p>
+            <p class="auth-footnote">비밀번호는 Firebase가 관리하며 메모 DB에는 저장되지 않습니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="memo-view" class="memo-view hidden">
+        <header class="memo-header">
+          <a class="brand" href="./" aria-label="온리노트 홈">
+            <span class="brand-mark" aria-hidden="true">O</span>
+            <span>온리노트</span>
+          </a>
+
+          <div class="account-area">
+            <div class="account-copy">
+              <span>로그인 계정</span>
+              <strong id="user-email"></strong>
+            </div>
+            <button id="logout-button" class="text-button" type="button">로그아웃</button>
+          </div>
+        </header>
+
+        <div class="memo-workspace">
+          <div class="memo-heading">
+            <div>
+              <p class="eyebrow">MY PRIVATE NOTE</p>
+              <h1>오늘의 메모</h1>
+            </div>
+            <div id="save-state" class="save-state" aria-live="polite">
+              <span class="state-dot" aria-hidden="true"></span>
+              <span>저장됨</span>
+            </div>
+          </div>
+
+          <label class="memo-field" for="memo-content">
+            <span class="sr-only">메모 내용</span>
+            <textarea
+              id="memo-content"
+              maxlength="20000"
+              placeholder="오늘 기억하고 싶은 내용을 적어보세요..."
+            ></textarea>
+          </label>
+
+          <div class="memo-meta">
+            <span id="character-count">0 / 20,000자</span>
+            <span id="updated-at">아직 저장하지 않았어요</span>
+          </div>
+
+          <div class="memo-actions">
+            <button id="save-button" class="primary-button" type="button">메모 저장</button>
+            <button id="copy-button" class="secondary-button" type="button">내용 복사</button>
+            <button id="clear-button" class="danger-button" type="button">내용 지우기</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

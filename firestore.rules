@@ -1,0 +1,21 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /memos/{userId} {
+      function isOwner() {
+        return request.auth != null && request.auth.uid == userId;
+      }
+
+      allow read: if isOwner();
+
+      allow create, update: if isOwner()
+        && request.resource.data.keys().hasOnly(['content', 'updatedAt'])
+        && request.resource.data.content is string
+        && request.resource.data.content.size() <= 20000
+        && request.resource.data.updatedAt is timestamp;
+
+      allow delete: if isOwner();
+    }
+  }
+}

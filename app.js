@@ -18,14 +18,16 @@ import {
 
 // Firebase Console > 프로젝트 설정 > 내 앱 > SDK 설정 및 구성에서 복사한 값으로 바꾸세요.
 // Firebase 웹용 설정값은 프로젝트 식별 정보이며, 실제 데이터 접근은 firestore.rules가 보호합니다.
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
-};
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCgio6RN53D1u4NtbyccD6acWVELYtxFPw",
+    authDomain: "hyun-memo-43368.firebaseapp.com",
+    projectId: "hyun-memo-43368",
+    storageBucket: "hyun-memo-43368.firebasestorage.app",
+    messagingSenderId: "90439199475",
+    appId: "1:90439199475:web:052b9ef92d9e9d0715e586",
+    measurementId: "G-NYG921TRGF"
+  };
 
 const elements = {
   authView: document.querySelector("#auth-view"),
